@@ -1,0 +1,580 @@
+
+Explpre and Summarize Data by Abeer_Alfawzan
+========================================================
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
+
+# Load all of the packages that you end up using in your analysis in this code
+
+library(corrplot)
+library(ggplot2)
+library(knitr)
+
+# Notice that the parameter "echo" was set to FALSE for this code chunk. This
+# prevents the code from displaying in the knitted HTML output. You should set
+# echo=FALSE for all code chunks in your file, unless it makes sense for your
+# report to show the code that generated a particular plot.
+
+# The other parameters for "message" and "warning" should also be set to FALSE
+# for other code chunks once you have verified that each plot comes out as you
+# want it to. This will clean up the flow of your report.
+
+```
+
+
+```{r echo=FALSE, Load_the_Data}
+
+# Load the Data
+
+df <- read.csv('wineQualityReds.csv')
+head(df,10)
+str(df)
+
+```
+
+# introduction:
+
+Here is the dataset which i have choosed. it is about Red Wine quality.it contains 1,599 red wines
+with 13 variables on the chemical properties of the wine .
+
+# Univariate Plots Section
+Now will investigate the dataset .
+
+```{r echo=FALSE, Univariate_plots1}
+
+df$quality.level <- ifelse(df$quality<5,'Low',
+                            ifelse(df$quality<7,'Medium','High'))
+df$quality.level<-ordered(df$quality.level, levels = c('Low','Medium','High'))
+ggplot(data=df, aes(quality.level,fill=quality.level),xlab ='quality.level'
+,ylab = 'Count')+geom_bar()+ scale_fill_hue(c=45, l=80)+
+ggtitle("Count of quality.level") +
+theme(plot.title = element_text(hjust = 0.5))
+
+```
+```{r echo=FALSE}
+summary(df$quality.level)
+```
+
+I have created new variable which is called :quality level based on value of variable quantity .this new varible contains 3 values : Low when quality value < 5 , high when quality value > 7 and medium if the quality value between these numbers.we can see from the bar chart ,the highest average of the quality level is medium which it's value < 7 and > 5 while the lowest average is low which it's value <5.
+
+
+```{r echo=FALSE, Univariate_plots2}
+
+qplot(x =df$free.sulfur.dioxide, data = df, xlab ='Free.Sulfur.Dioxide',ylab = 'Count',bins='30')+ggtitle("Count of Free.Sulfur.Dioxide") +
+ theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+```{r echo=FALSE}
+
+summary(df$free.sulfur.dioxide)
+
+```
+
+Here is the Histogram which define the distribution of free.sulfur.dioxide. it is clear from the graph the distribution is right skewed.
+
+```{r echo=FALSE, Univariate_plots3}
+
+qplot(x =df$total.sulfur.dioxide, data = df, xlab ='Total.Sulfur.Dioxide',ylab = 'Count',bins='30')+ggtitle("Count of Total.Sulfur.Dioxide") +
+ theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+```{r echo=FALSE}
+
+summary(df$total.sulfur.dioxide)
+
+```
+
+Here is the Histogram which define the distribution of total.sulfur.dioxide . it is clear from the graph the distribution is right skewed.
+
+```{r echo=FALSE, Univariate_plots4}
+
+qplot(x =df$fixed.acidity, data = df, xlab ='Fixed.Acidity',ylab = 'Count',
+bins='30')+ggtitle("Count of Fixed.Acidity") +
+theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r echo=FALSE}
+
+summary(df$fixed.acidity)
+
+```
+
+Here is the Histogram which define the distribution of fixed.acidity . it is clear from the graph the distribution is looks normal distribution .
+
+```{r echo=FALSE, Univariate_plots5}
+
+qplot(x =df$citric.acid, data = df, xlab ='Citric.Acid',ylab = 'Count',
+bins='30')+ggtitle("Count of Citric.Acid") +
+theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r echo=FALSE}
+
+summary(df$citric.acid)
+
+```
+
+Here is the Histogram which define the distribution of citric.acid .it is clear from the graph the distribution is right skewed.we can see, citric.acid have 150 values that all were zero .
+
+```{r echo=FALSE, Univariate_plots6}
+
+qplot(x =df$volatile.acidity, data = df, xlab ='Volatile.Acidity',ylab = 'Count'
+,bins='30')+ggtitle("Count of Volatile.Acidity") +
+theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r echo=FALSE}
+
+summary(df$volatile.acidity)
+
+```
+
+Here is the Histogram which defin the distribuation of volatile.acidity . it is clear from the graph the distribuation is looks normal distribuation .we can see, the highest volatile.acidity is arround .6 which have arround 190 values .
+
+
+```{r echo=FALSE, Univariate_plots7}
+
+qplot(x =df$residual.sugar, data = df, xlab ='Residual.Sugar',ylab = 'Count',
+bins='30',outline = FALSE)+ggtitle("Count of Residual.Sugar") +
+ theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r echo=FALSE}
+
+summary(df$residual.sugar)
+
+```
+
+Here is the Histogram which defin the distribuation of residual.sugar . it is clear from the graph the distribuation is looks normal distribuation .we can see , the highest residual.sugar is arround 2 which have arround more than 600 values .
+
+```{r echo=FALSE, Univariate_plots8}
+
+qplot(x =df$chlorides, data = df, xlab ='Chlorides',ylab = 'Count',
+bins='30')+ggtitle("Count of Chlorides")+
+theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r echo=FALSE}
+
+summary(df$chlorides)
+
+```
+
+Here is the Histogram which defin the distribuation of chlorides .it is clear from the graph the distribuation is looks normal distribuation we can defind the max of chlorides which arround  0.01200 where the min value is arround 0.61100 .
+
+
+```{r echo=FALSE, Univariate_plots9}
+
+qplot(x =df$density, data = df, xlab ='Density',ylab = 'Count',
+bins='30')+ggtitle("Count of Density") +
+theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r echo=FALSE}
+
+summary(df$density)
+
+```
+
+Here is the Histogram which defin the distribuation of density . it is clear from the graph the distribuation is looks normal distribuation .we can defind the max of density which arround 0.9901 where the min value is arround 1.0037 .
+  
+```{r echo=FALSE, Univariate_plots10}
+
+qplot(x =df$sulphates, data = df, xlab ='Sulphates',ylab = 'Count',
+bins='30')+ggtitle("Count of Sulphates") +
+theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r echo=FALSE}
+
+summary(df$sulphates)
+
+```
+
+Here is the Histogram which defin the distribuation of sulphates .it is clear from the graph the distribuation is looks right skewed distribuation .we can define , the median of sulphates which is arround 0.6200 where is the mean which 0.6581.
+
+```{r echo=FALSE, Univariate_plots11}
+
+qplot(x =df$alcohol, data = df, xlab ='Alcohol',ylab = 'Count',
+bins='30')+ggtitle("Count of Alcohol") +
+theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r echo=FALSE}
+
+summary(df$alcohol)
+
+```
+
+Here is the Histogram which define the distribution of alcohol .it is clear from the graph the distribution is looks right skewed distribution.we can define the highest value of alcohol which is around 9.25 .
+
+```{r echo=FALSE, Univariate_plots12}
+
+qplot(x =df$pH, data = df, xlab ='PH',ylab = 'Count',
+bins='30')+ggtitle("Count of PH") +
+ theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r echo=FALSE}
+
+summary(df$pH)
+
+```
+
+Here is the Histogram which defin the distribuation of alcohol .it is clear from the graph the distribuation is looks Symmetric distribuation. we can define the max value which arround 4.010 , where the min value which arround 2.740.
+ 
+```{r echo=FALSE, Univariate_plots}
+
+#transforming the qualty from categorical variable to order factor .
+df$quality <- factor(df$quality, ordered = T)
+
+```
+
+```{r echo=FALSE, Univariate_plots13}
+
+qplot(x =df$quality, data = df, xlab ='Quality',
+ylab = 'Count')+ggtitle("Count of Quality") +
+theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+```{r echo=FALSE}
+
+summary(df$quality)
+
+```
+
+It is clear from the graph the distribution is looks normal distribution .we can find the highest level of quality is on 5 where the lowest level is on 3 .
+
+# Univariate Analysis
+### What is the structure of your dataset?
+The dataset of Red Wine quality contains about 1,599 red wines
+with 14 variables on the chemical properties of the wine , include different 
+features of Red Wine such as PH value,alchole,quality and sugar which wine
+contain.
+
+### What is/are the main feature(s) of interest in your dataset?
+The main features in the data set is quality.I'd like to determine which
+features are best for predicting the the quality of wine. I suspect many 
+variables of wine can be used to build a predictive model to define the quality
+of wine , quality of each wine, providing a rating which < 5 (Low) , >7 (High ) and between these value 
+(Medium) based on the value of quality  of wine .
+
+### What other features in the dataset do you think will help support your \
+investigation into your feature(s) of interest?
+as the quality is the main feature in the data set,i think these variable (PH,
+residual sugar,density ,alcohol, fixed acidity and volatile acidity ) will
+affect in quality variable .
+
+### Did you create any new variables from existing variables in the dataset?
+yes , i have created new variable which called quality level which have 3 values:
+Low , Medium and high.
+
+### Of the features you investigated, were there any unusual distributions? \
+Did you perform any operations on the data to tidy, adjust, or change the form \
+of the data? If so, why did you do this?
+The dataset which i have choosed it was tidy, i dont need to clean or make 
+any change on it .
+
+# Bivariate Plots Section
+In this section will create correlation matrix for all variables which help
+me to define the relationships between the variables based on the correlation
+between them.
+
+
+```{r echo=FALSE, Bivariate_Plots}
+# Created correlation matrix 
+names(df)
+df$X <- NULL
+tmdata <- df[,!names(df) %in% c("quality", "quality.level")] 
+M <- cor(tmdata)
+corrplot(M, order="hclust",method = "number",addrect = 3, tl.col = "black")
+
+```
+
+```{r echo=FALSE}
+str(df)
+```
+
+Here i have deleted the X variable which only indicate an index , so not nessesary to be avaialable in the dataset,  also it is affect in correlation matrix for that i am deleting X variable .
+Correlation matrix has been created to defin the correlation and the relation between the variable .
+
+```{r echo=FALSE, Bivariate_Plots1}
+ 
+ggplot(aes(x = density, y = pH), data = df) +
+  geom_jitter(color = "darkred", alpha = 1/4) + 
+  stat_smooth(method = 'lm',color = "darkblue")
+
+```
+
+```{r echo=FALSE}
+
+cor(df$density, df$pH)
+
+```
+
+It is clear from the graph , High pH having low concentration of density. also, we can see the much concentration of density is between .995 and .997 on PH between 3.2 and 3.6 . 
+The correlation between these variable is negative , which mean PH increase as the other variable decreases.
+
+```{r echo=FALSE, Bivariate_Plots2}
+
+ggplot(aes(x = citric.acid, y = pH), data = df) +
+  geom_jitter(color = "darkred", alpha = 1/4) + 
+  stat_smooth(method = 'lm',color = "darkblue")
+
+```
+
+```{r echo=FALSE}
+
+cor(df$citric.acid, df$pH)
+
+```
+
+Here we can see , High pH having low concentration of citric.acid . also,it is clear fron the grap the much concentration of citric.acid is between 0.00 and 0.50 on PH between 3.2 and 3.6 . 
+The correlation between these variable is negative which mean when PH increase then citric.acid decrease .
+
+```{r echo=FALSE, Bivariate_Plots3}
+
+ggplot(aes(x = volatile.acidity, y = pH), data = df) +
+  geom_jitter(color = "darkred", alpha = 1/4) + 
+  stat_smooth(method = 'lm',color = "darkblue")
+
+```
+
+```{r echo=FALSE}
+
+cor(df$volatile.acidity, df$pH)
+
+```
+
+Here we can see , High pH having high concentration of volatile.acidity. also, we can define the much concentration of volatile.acidity is between 0.3 and 0.7 on PH between 3.0 and 3.5 . 
+The correlation between these variable is positive which mean PH increase as volatile.acidity increase .
+
+```{r echo=FALSE, Bivariate_Plots4}
+
+ggplot(aes(x = citric.acid, y = volatile.acidity), data = df) +
+  geom_jitter(color = "darkred", alpha = 1/4) + 
+  stat_smooth(method = 'lm',color = "darkblue")
+
+```
+
+```{r echo=FALSE}
+
+cor(df$citric.acid, df$volatile.acidity)
+
+```
+
+Here It seems that for wines with volatile.acidity , having a less concentration of citric.acid .
+the correlation here between the variables is negative .
+
+```{r echo=FALSE, Bivariate_Plots5}
+
+ggplot(aes(x = alcohol, y = pH), data = df) +
+  geom_jitter(color = "darkred", alpha = 1/4) + 
+  stat_smooth(method = 'lm',color = "darkblue")
+
+```
+
+```{r echo=FALSE}
+cor(df$alcohol, df$pH)
+```
+
+Here It seems that for wines with high alcohol content, having a 
+high concentration of PH .the correlation between these variables is positive.
+
+```{r echo=FALSE, Bivariate_Plots6}
+
+ggplot(aes(x = density, y = fixed.acidity), data = df) +
+  geom_jitter(color = "darkred", alpha = 1/4) + 
+  stat_smooth(method = 'lm',color = "darkblue")
+
+```
+
+```{r echo=FALSE}
+
+cor(df$density, df$fixed.acidity)
+
+```
+
+Here It seems that for wines with high density , having a high concentration of fixed.acidity .
+The correlation between these variable is positive.
+
+```{r echo=FALSE, Bivariate_Plots7}
+
+ggplot(aes(x = alcohol, y = pH), data = df) +
+  geom_jitter(color = "darkred", alpha = 1/4) + 
+  stat_smooth(method = 'lm',color = "darkblue")
+
+```
+
+```{r echo=FALSE}
+cor(df$alcohol, df$pH)
+```
+
+Here It seems that for wines with high PH , having a high concentration of alcohol .
+The correlation between these variable is positive.
+
+# Bivariate Analysis
+### Talk about some of the relationships you observed in this part of the \
+investigation. How did the feature(s) of interest vary with other features in \
+the dataset?
+once i created the correlation matrix ,i defined the correlation between the variable weather is negative 
+or positive.
+based on the Analysis i defin the relationships between the variable as follow:
+the negative correlation is between density,pH /citric.acid,volatile.acidity /citric.acid,PH.
+while the positive correlation is between density, fixed.acidity/alcohoh,ph/volatile.acidity,PH.
+
+### Did you observe any interesting relationships between the other features \
+(not the main feature(s) of interest)?
+I observed a strong correlation between density,fixed.acidity of wine they had positive relationship, indicating that wines with more density have more residual fixed.acidity. I also found
+ the strong negative correlation between citric.acid, volatile.acidity .the more citric.acid of wine , contains the lower of volatile.acidity . 
+
+### What was the strongest relationship you found?
+the strongest rerationship that i founs it was between density,fixed.acidity
+which had correlation of 0.6680473. 
+
+# Multivariate Plots Section
+
+```{r echo=FALSE, Multivariate_Plots1}
+
+ggplot(data = df,
+       aes(x = alcohol, y = pH,
+           color = quality)) + geom_point(alpha=.5,size=2) +scale_color_brewer(type ="seq" ,palette ="Set1")
+
+```
+
+
+It is clear from the graph , when the value of alcohol between 9 and 10 while the value of PH between 3.0
+and 3.5 lead to medium quality .the relationship between PH and alcohol is positive rerationship .
+
+```{r echo=FALSE, Multivariate_Plots2}
+
+#Creat plot for 3 variabls density,fixed.acidity,quality.
+ggplot(data = df,
+       aes(x = density, y = fixed.acidity,
+           color = quality)) +
+  geom_point(alpha=.5,size=2) +scale_color_brewer(type ="seq" ,palette ="Set1")+ 
+  facet_wrap(~quality.level)
+
+```
+
+Here we are trying to defin the relationship between 3 variables .
+we can see from the visulaizattion, most value of density which is on level medium and high .The relationship between density and fixed.acidity is positive rerationship .
+
+
+```{r echo=FALSE, Multivariate_Plots3}
+
+#Creat plot for 3 variabls citric.acid,volatile.acidity,quality.
+ggplot(data = df,
+       aes(x = citric.acid, y = volatile.acidity,
+           color = quality)) +
+  geom_point(alpha=.5,size=2) +scale_color_brewer(type ="seq" ,palette ="Set1")+ 
+  facet_wrap(~quality.level)
+
+```
+
+Here we are trying to defin the relationship between 3 variables .
+we can see from the visulaizattion, most value of citric.acid which is on level medium and high while the least values on level low.The correlation here between these variables is negative .
+
+# Multivariate Analysis
+### Talk about some of the relationships you observed in this part of the \
+investigation. Were there features that strengthened each other in terms of \
+looking at your feature(s) of interest?
+I have created scatterplot to investigate the interactions between PH,
+alcohol ,colred by qyality .the relationships between these variable was positive relationships.
+the value of alcohol which between 9 and 10 while the value of PH which between 3.0
+and 3.5 lead to medium quality .
+
+### Were there any interesting or surprising interactions between features?
+The intersting bart here: choosing the scaterplot colored by quality to define the relationship between these 3 variables, if the PH increased then alcohol increased .
+
+### OPTIONAL: Did you create any models with your dataset? Discuss the \
+strengths and limitations of your model.
+
+------
+
+# Final Plots and Summary
+
+### Plot One
+
+```{r echo=FALSE, Plot_One}
+
+df$quality.level <- ifelse(df$quality<5,'Low',
+                            ifelse(df$quality<7,'Middum','High'))
+df$quality.level<- ordered(df$quality.level, levels = c('Low','Middum','High'))
+ggplot(data=df, aes(quality.level,fill=quality.level))+geom_bar()+ scale_fill_hue(c=45, l=80,"quality level")+ggtitle("Count of quality level")+xlab("quality level")+ylab("count")
+
+```
+
+```{r echo=FALSE}
+
+summary(df$quality.level)
+
+```
+
+### Description One
+I have created new variable which is called :quality level based on value of variable quantity .this new varible contains 3 values : Low when quality value < 5 , high when quality value > 7 and medium if the quality value between these numbers.we can see from the bar chart ,the highest average of the quality level is medium which it's value < 7 and > 5 while the lowest average is low which it's value <5.
+
+### Plot Two
+
+```{r echo=FALSE, Plot_Two}
+
+ggplot(aes(x = density, y = fixed.acidity), data = df) +
+  geom_jitter(color = "darkred", alpha = 1/4) + 
+  stat_smooth(method = 'lm',color = "darkblue")+ggtitle("Correlation between fixed acidity and density")+xlab("density(g/cm3)")+ylab("fixed acidity (tartaric acid - g/dm3)")
+
+```
+
+```{r echo=FALSE}
+
+cor(df$density, df$fixed.acidity)
+
+```
+
+### Description Two
+
+Here It seems that for wines with high density , having a high concentration of fixed.acidity .
+The correlation between these variable is positive which mean : when fixed.acidity increased 
+density increased .
+
+### Plot Three
+
+```{r echo=FALSE, Plot_Three}
+
+ggplot(data = df,
+       aes(x = alcohol, y = pH,
+           color = quality)) + geom_point(alpha=.5,size=2) +scale_color_brewer(type ="seq" ,palette ="Set1","Quality (out of 10)")+ggtitle("Correlation between alcohol and pH")+xlab("alcohol (%)")+ylab("pH")   
+
+```
+
+### Description Three
+It is clear from the graph , when the value of alcohol between 9 and 10 while the value of PH between 3.0
+and 3.5 lead to medium quality .the relationship between PH and alcohol is positive rerationship .
+------
+
+# Reflection
+In this project and throught the analysis , i found the quality consider the most featsure in the dataset.
+there are many varible which affect on quality of wine such as (PH,
+residual sugar,density ,alcohol, fixed acidity and volatile acidity ) , these varibles will cause better or bad  wine . for example, when the value of alcohol between 9 and 10 while the value of PH between 3.0 and 3.5 lead to medium quality. Also, wines with high PH , having a high concentration of alcohol.
+the question that i want to add : why there is no column related to the taste of wine based on country , because Swedish persons, their taste is different from the English and different from the American people .
